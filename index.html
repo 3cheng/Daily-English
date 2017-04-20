@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>每日一句</title>
+	<script src="https://cdn.bootcss.com/vue/2.2.6/vue.min.js"></script>
+	<script src="https://cdn.bootcss.com/vue-resource/1.3.1/vue-resource.min.js"></script>
+	<style type="text/css">
+		#cont{margin:50px auto;width:1000px;height:620px;position:relative;border:10px solid #eee;}
+		#cont .content{position: absolute;top:40%;width:80%;margin:0 10%;text-align:center;color:#fff;font-size:30px;word-spacing: 2px;letter-spacing: 1px;background:rgba(0,0,0,.3)}
+		#cont .note{position: absolute;bottom:0;width:92%;padding:0 4%;text-align:center;color:#fff;font:20px/30px '楷体';background:rgba(0,0,0,.8)}
+		code{font-family: '微软雅黑';word-spacing: 2px;letter-spacing: 1px;}
+	</style>
+</head>
+<body>
+	<div id="app">
+		<div id="cont">
+			<img :src="imgsrc" :width="wid" :height="hei">
+			<p class="content">{{content}}</p>
+			<div class="note">{{note}}</div>
+		</div>
+	</div>
+	<script>
+		var vm = new Vue({
+			el:'#app',
+			data:{
+				content:'',
+				note:'',
+				imgsrc:'',
+				wid:1000,
+				hei:620
+			},
+
+			mounted:function(){
+				this.$nextTick(function(){
+					this.vjsonp()
+				})
+			},
+
+			methods:{
+				vjsonp:function(){
+					vm.$http.jsonp('http://open.iciba.com/dsapi/?callback=showIcibaDS').then(function(res){
+						console.log(res)
+						this.content=res.body.content.split('—')[0]
+						this.note=res.body.note.split('–')[0]
+						this.imgsrc=res.body.picture2
+					})
+				}
+			}
+
+		})
+	</script>
+</body>
+</html>
